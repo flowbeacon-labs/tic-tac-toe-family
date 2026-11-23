@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1d2256">
+<meta name="description" content="A colorful two-player or solo Tic-Tac-Toe game with named players, X/O swaps, and best-of series.">
+<title>Family Tic-Tac-Toe · Flowbeacon Arcade</title>
+<link rel="stylesheet" href="style.css?v=1">
+<script src="game.js?v=1" defer></script>
+</head>
+<body>
+<div class="app">
+<header class="topbar"><div class="brand">🎮 <span>Flowbeacon</span> <strong>Tic-Tac-Toe</strong></div><button class="small-button" id="settings-button" type="button">⚙️ New match</button></header>
+<main>
+<section class="hero"><span class="eyebrow">🌈 FAMILY GAME NIGHT</span><h1>Three in a row. <em>Big smiles.</em></h1><p>Play together, swap sides, and see who wins the series!</p></section>
+<section class="scoreboard" aria-label="Match scoreboard">
+ <div class="player-card active" id="player-card-0"><div class="player-name" id="player-name-0">Player 1</div><div class="player-mark" id="player-mark-0">X</div><div class="player-wins" id="player-score-0">0</div><div class="score-label">WINS</div></div>
+ <div class="score-center"><span class="score-vs">VS</span><span id="round-label">Round 1</span><span class="draw-score">🤝 Draws: <b id="draw-count">0</b></span></div>
+ <div class="player-card" id="player-card-1"><div class="player-name" id="player-name-1">Player 2</div><div class="player-mark o" id="player-mark-1">O</div><div class="player-wins" id="player-score-1">0</div><div class="score-label">WINS</div></div>
+</section>
+<section class="main-layout">
+ <div class="board-panel"><div class="status" id="status" aria-live="polite">Player 1's turn!</div><div class="board" id="board" role="group" aria-label="Tic-Tac-Toe board">
+ <button class="cell" data-cell="0" aria-label="Top left" type="button"></button><button class="cell" data-cell="1" aria-label="Top middle" type="button"></button><button class="cell" data-cell="2" aria-label="Top right" type="button"></button>
+ <button class="cell" data-cell="3" aria-label="Middle left" type="button"></button><button class="cell" data-cell="4" aria-label="Center" type="button"></button><button class="cell" data-cell="5" aria-label="Middle right" type="button"></button>
+ <button class="cell" data-cell="6" aria-label="Bottom left" type="button"></button><button class="cell" data-cell="7" aria-label="Bottom middle" type="button"></button><button class="cell" data-cell="8" aria-label="Bottom right" type="button"></button>
+ </div><div class="board-actions"><button id="next-round" class="button primary" type="button" disabled>Next round ➜</button><button id="reset-round" class="button muted" type="button">↻ Replay round</button></div><div id="final-message" class="final-message hidden" role="status"></div></div>
+ <aside class="sidebar"><div class="side-box"><h2>🏆 Series</h2><div class="series-type" id="series-name">Best of 5</div><div id="series-progress" class="series-progress">First to 3 wins</div><div class="meter"><div id="meter-0" class="meter-x"></div><div id="meter-1" class="meter-o"></div></div><div class="stats"><div><span>Rounds played</span><strong id="played-count">0</strong></div><div><span>Decisive rounds</span><strong id="decisive-count">0</strong></div></div></div>
+ <div class="side-box"><h2>🔄 X and O</h2><p id="swap-hint">Symbols swap automatically every round.</p><button id="swap-now" class="button outline" type="button">Swap X ↔ O</button><label class="toggle-row"><input type="checkbox" id="auto-swap" checked><span>Automatically swap each round</span></label></div>
+ <div class="side-box"><h2>📜 Round history</h2><ol id="history" class="history"><li class="empty">Your adventures will show up here.</li></ol></div>
+ <button id="reset-scores" class="button danger" type="button">Reset scores & start over</button>
+ </aside>
+</section>
+</main>
+<footer>Made for family fun 💜 · Works offline after downloading the files · Scores saved on this device</footer>
+</div>
+<div class="modal" id="setup-modal" role="dialog" aria-modal="true" aria-labelledby="setup-heading"><form id="setup-form" class="setup-panel">
+ <div class="modal-symbols" aria-hidden="true">❌ 🌟 ⭕</div><h2 id="setup-heading">Who's playing?</h2><p>Set up a fun family challenge. You can change this later.</p>
+ <div class="field"><label for="p1-name">Player 1 name</label><input id="p1-name" maxlength="22" autocomplete="off" placeholder="e.g. Papa" value="Player 1" required></div>
+ <label class="toggle-row mode-choice"><input type="checkbox" id="vs-computer"><span>Play against the computer</span></label>
+ <div class="field" id="p2-field"><label for="p2-name">Player 2 name</label><input id="p2-name" maxlength="22" autocomplete="off" placeholder="e.g. Aditi" value="Player 2" required></div>
+ <div class="field hidden" id="difficulty-field"><label for="difficulty">Computer difficulty</label><select id="difficulty"><option value="easy">Easy · great for kids</option><option value="medium">Medium · a challenge</option><option value="hard">Hard · expert</option></select></div>
+ <div class="field"><label for="format">Match format</label><select id="format"><option value="5">Best of 5 (first to 3 wins)</option><option value="7">Best of 7 (first to 4 wins)</option><option value="3">Best of 3 (first to 2 wins)</option><option value="9">Best of 9 (first to 5 wins)</option><option value="custom">Best of N (choose a number)</option><option value="unlimited">Unlimited games · keep scoring</option></select></div>
+ <div class="field hidden" id="custom-field"><label for="custom-count">How many decisive games? (odd number, 1–99)</label><input id="custom-count" type="number" min="1" max="99" step="2" value="11" inputmode="numeric"></div>
+ <label class="toggle-row"><input id="setup-auto-swap" type="checkbox" checked><span>Swap X and O between rounds</span></label>
+ <div class="notice" id="restore-note">Your current match can be resumed.</div><div class="setup-actions"><button class="button muted hidden" id="resume-button" type="button">Resume match</button><button class="button primary" type="submit">Start playing ✨</button></div>
+ </form></div>
+<div id="confetti" aria-hidden="true"></div>
+</body></html>
