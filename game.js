@@ -3,6 +3,15 @@ const $=id=>document.getElementById(id);
 const SAVE_KEY='flowbeacon-family-tic-tac-toe-v1';
 const WIN_LINES=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
 const cells=[...document.querySelectorAll('.cell')];
+// iOS Safari can still pinch-zoom despite touch-action or viewport restrictions.
+// Block multi-finger gestures without cancelling the normal single-finger tap/click.
+for(const type of ['gesturestart','gesturechange','gestureend']){
+ document.addEventListener(type,e=>e.preventDefault(),{passive:false});
+}
+document.addEventListener('touchmove',e=>{
+ if(e.touches.length>1)e.preventDefault();
+},{passive:false});
+
 const defaults=()=>({names:['Player 1','Player 2'],vsAI:false,difficulty:'easy',format:'5',target:5,autoSwap:true,symbols:['X','O'],board:Array(9).fill(''),turn:0,scores:[0,0],draws:0,round:1,history:[],ended:false,seriesWinner:null,winLine:null,result:null});
 let state=defaults(),hasSave=false,aiTimer=null;
 function save(){try{localStorage.setItem(SAVE_KEY,JSON.stringify(state));hasSave=true;}catch{}}
